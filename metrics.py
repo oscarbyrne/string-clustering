@@ -54,3 +54,12 @@ def matching(a, b):
             matching.append(char)
 
     return tuple(matching)
+
+
+if __name__ == '__main__':
+    from math import isclose
+    # Test examples from: https://rosettacode.org/wiki/Jaro_distance
+    sig_figs = 10
+    assert isclose(0.9444444444, jaro_similarity('MARTHA', 'MARHTA'),           abs_tol=10**-sig_figs) 
+    assert isclose(0.7666666667, jaro_similarity('DIXON', 'DICKSONX'),          abs_tol=10**-sig_figs) 
+    assert isclose(0.8962962963, jaro_similarity('JELLYFISH', 'SMELLYFISH'),    abs_tol=10**-sig_figs) 
