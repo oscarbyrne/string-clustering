@@ -2,6 +2,8 @@ from os.path import isfile
 from itertools import combinations
 import sqlite3
 
+from tqdm import tqdm
+
 
 class DistanceCache():
 
@@ -19,7 +21,9 @@ class DistanceCache():
             (a text, b text, distance real)
             '''
         )
-        for a, b in pairs:
+        n = len(entries)
+        npairs = n*(n-1)//2
+        for a, b in tqdm(pairs, total=npairs):
             a, b = sorted((a, b))
             d = self.distance(a, b)
             curs.execute(
