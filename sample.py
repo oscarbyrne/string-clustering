@@ -4,6 +4,7 @@ from pprint import pprint
 from stringclusters import (
     clustered,
     jaro_winkler_distance,
+    DistanceCache,
 )
 
 
@@ -36,19 +37,26 @@ parser.add_argument(
 )
 
 
-def do_clustering(strings_file, n_clusters, iterations):
+def do_clustering(strings_file, n_clusters, iterations=5, cached=False):
     with open(strings_file) as f:
         strings = tuple(line.rstrip() for line in f)
 
-    return clustered(strings, n_clusters, jaro_winkler_distance, iterations)
+    if not cached:
+        return clustered(strings, n_clusters, jaro_winkler_distance, iterations)
+
+    # TODO: optimize clustering algorithm by pushing calculations from python to sql
+    with DistanceCache(strings_file, jaro_winkler_distance) as cached:
+        return clustered(strings, n_clusters, cached.distance, iterations)
 
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.cached:
-        raise NotImplementedError()
-    else:
-        clusters = do_clustering(args.strings_file, args.n_clusters, args.iterations)
+    clusters = do_clustering(
+        args.strings_file,
+        args.n_clusters,
+        args.iterations,
+        args.cached
+    )
 
     pprint(clusters)
 

@@ -39,7 +39,7 @@ class DistanceCache():
 
     def __init__(self, src, distance):
         self.src = src
-        self.distance = distance
+        self._distance = distance
         self.conn = None
         if isfile(self.db):
             pass
@@ -50,7 +50,7 @@ class DistanceCache():
     def db(self):
         return f'.cache__{self.src}'
 
-    def get_distance(self, a, b):
+    def distance(self, a, b):
         if a == b:
             return 0.0
         a, b = sorted((a, b))
@@ -68,7 +68,7 @@ class DistanceCache():
     def __enter__(self):
         self.conn = sqlite3.connect(self.db)
         self.curs = self.conn.cursor()
-        return self.get_distance
+        return self
         
     def __exit__(self, type, value, traceback):
         self.conn.close()
