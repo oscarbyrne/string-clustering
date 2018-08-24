@@ -6,6 +6,13 @@ from tqdm import tqdm
 
 
 class DistanceCache():
+    """
+    Used to precompute distances and save them to
+    a database as a lookup table.
+
+    If the database already exists, we just connect
+    to it.
+    """
 
     def compile(self):
         with open(self.src) as f:

@@ -3,6 +3,9 @@ from functools import partial
 
 
 def clustered(items, n_clusters, distance, iterations):
+    """
+    Implements K-Medoids clustering
+    """
 
     def associate(items, medoids):
         clusters = {medoid: [] for medoid in medoids}
@@ -27,19 +30,21 @@ def clustered(items, n_clusters, distance, iterations):
 
     previous = {}
 
+    # start off clustering around random medoids
     clusters = associate(
         items,
         random.sample(items, n_clusters)
     )
 
-    # wait for solution to converge
     for i in range(iterations):
         previous = clusters
+        # recompute clusters with new medoids
         clusters = associate(
             items,
             [calculate_medoid(cluster) for cluster in clusters.values()]
         )
 
+        # has the solution converged?
         if cost(clusters) == cost(previous):
             break
 
